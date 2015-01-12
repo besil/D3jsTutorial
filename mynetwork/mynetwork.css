@@ -256,6 +256,10 @@ line.link {
     stroke: #B2D9D8;
 }
 
+line.selectedlink {
+	stroke:"red";
+}
+
 circle {
     cursor: crosshair;
     fill: #EBC763;

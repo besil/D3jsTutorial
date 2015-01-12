@@ -4,13 +4,13 @@
 //since they need D3.js stuff. So we put placeholders.
 
 
-//Highlight a movie in the graph. It is a closure within the d3.json() call.
+//Highlight a node in the graph. It is a closure within the d3.json() call.
 var selectNode = undefined;
 
 //Change status of a panel from visible to hidden or viceversa
 var toggleDiv = undefined;
 
-//Clear all help boxes and select a movie in network and in movie details panel
+//Clear all help boxes and select a node in network and in node details panel
 var clearAndSelect = undefined;
 
 
@@ -24,22 +24,13 @@ var zoomCall = undefined;
 //Do the stuff -- to be called after D3.js has loaded
 function D3ok() {
 
-	DEBUG = false;
-
-	// In debug mode, ensure there is a console object (MSIE does not have it by 
-	// default). In non-debug mode, ensure the console log does nothing
-	if( !window.console || !DEBUG ) {
-		window.console = {};
-		window.console.log = function () {};
-	}
-
 	// Some constants
 	var WIDTH = 960,
 	HEIGHT = 600,
 	SHOW_THRESHOLD = 2.5;
 
 	// Variables keeping graph state
-	var activeMovie = undefined;
+	var activeNode = undefined;
 	var currentOffset = { x : 0, y : 0 };
 	var currentZoom = 1.0;
 
@@ -63,7 +54,7 @@ function D3ok() {
 	.size( [WIDTH, HEIGHT] )
 	.linkStrength( function(d,idx) { return d.weight; } );
 
-	// Add to the page the SVG element that will contain the movie network
+	// Add to the page the SVG element that will contain the node network
 	var svg = d3.select("#mynetwork").append("svg:svg")
 	.attr('xmlns','http://www.w3.org/2000/svg')
 	.attr("width", WIDTH)
@@ -72,7 +63,7 @@ function D3ok() {
 	.attr("viewBox", "0 0 " + WIDTH + " " + HEIGHT )
 	.attr("preserveAspectRatio", "xMidYMid meet");
 
-	// Movie panel: the div into which the movie details info will be written
+	// node panel: the div into which the node details info will be written
 	nodeInfoDiv = d3.select("#nodeinfo");
 
 	/* ....................................................................... */
@@ -119,8 +110,8 @@ function D3ok() {
 	}
 
 
-	/* Clear all help boxes and select a movie in the network and in the 
-     movie details panel
+	/* Clear all help boxes and select a node in the network and in the 
+     node details panel
 	 */
 	clearAndSelect = function (id) {
 		toggleDiv('faq','off'); 
@@ -134,9 +125,9 @@ function D3ok() {
 	 */
 	function getNodeInfo( n, nodeArray ) {
 		info = '<div id="cover">';
-		
-		info += "<br></br><br></br>"
-		
+
+		info += "<br></br><br></br>";
+
 		info += '<strong>Index</strong>: ' 	+ +n.index+'</br>';
 		info += '<strong>Level</strong>: ' 	+ +n.level+'</br>';
 		info += '<strong>Label</strong>: ' 	+ +n.label+'</br>';
@@ -144,15 +135,15 @@ function D3ok() {
 		info += '<strong>Id   </strong>: ' 	+ +n.id   +'</br>';
 		info += '<div class=f><span class=l>Related to</span>: ';
 		n.links.forEach( function(idx) {
-		info += '[<a href="javascript:void(0);" onclick="selectNode('  
-		+ idx + ',true);">' + nodeArray[idx].label + '</a>]'
+			info += '[<a href="javascript:void(0);" onclick="selectNode('  
+				+ idx + ',true);">' + nodeArray[idx].label + '</a>]'
 		});
-		
+
 		info += "<br></br><br></br>";
-		
+
 		info +=
 			'<img src="img/close.png" class="action" style="top: 0px;" title="close panel" onClick="toggleDiv(\'nodeinfo\');"/>' +
-			'<img src="img/target-32.png" class="action" style="top: 280px;" title="center graph on movie" onclick="selectNode('+n.index+',true);"/>';
+			'<img src="img/target-32.png" class="action" style="top: 280px;" title="center graph on node" onclick="selectNode('+n.index+',true);"/>';
 		info += "</div>";
 		return info
 	}
@@ -169,13 +160,13 @@ function D3ok() {
 				var linkArray = data.links;
 				// console.log("NODES:",nodeArray);
 				// console.log("LINKS:",linkArray);
-				
+
 				var minScore =
 					Math.min.apply(null,nodeArray.map(function(n) {return n.score}));
-				
+
 				var maxScore =
 					Math.max.apply(null,nodeArray.map(function(n) {return n.score}));
-				
+
 				minLinkWeight = 
 					Math.min.apply( null, linkArray.map( function(n) {return n.weight;} ) );
 				maxLinkWeight = 
@@ -229,8 +220,14 @@ function D3ok() {
 				.attr('r', function(d) { return node_size(d.score); } )
 				.attr('pointer-events', 'all')
 				.on("click", function(d) { showNodePanel(d); } )
-				.on("mouseover", function(d) { highlightGraphNode(d,true,this);  } )
-				.on("mouseout",  function(d) { highlightGraphNode(d,false,this); } );
+				.on("mouseover", function(d) { 
+					highlightGraphNode(d,true,this);
+					highlightNodeEdges(d, true, this);
+				} )
+				.on("mouseout",  function(d) { 
+					highlightGraphNode(d,false,this);
+					highlightNodeEdges(d, false, this);
+				} );
 
 				// labels: a group with two SVG text: a title and a shadow (as background)
 				var graphLabels = networkGraph.append('svg:g').attr('class','grp gLabel')
@@ -267,12 +264,12 @@ function D3ok() {
 				{
 					//if( d3.event.shiftKey ) on = false; // for debugging
 
-					// If we are to activate a movie, and there's already one active,
+					// If we are to activate a node, and there's already one active,
 					// first switch that one off
-					if( on && activeMovie !== undefined ) {
-						// console.log("..clear: ",activeMovie);
-						highlightGraphNode( nodeArray[activeMovie], false );
-						// console.log("..cleared: ",activeMovie);	
+					if( on && activeNode !== undefined ) {
+						// console.log("..clear: ",activeNode);
+						highlightGraphNode( nodeArray[activeNode], false );
+						// console.log("..cleared: ",activeNode);	
 					}
 
 					// console.log("SHOWNODE "+node.index+" ["+node.label + "]: " + on);
@@ -306,18 +303,64 @@ function D3ok() {
 					} );
 
 					// set the value for the current active movie
-					activeMovie = on ? node.index : undefined;
+					activeNode = on ? node.index : undefined;
 					// console.log("SHOWNODE finished: "+node.index+" = "+on );
+				}
+
+				/** Select/unselect a edges in the network graph **/
+				function highlightNodeEdges( node, on ) {
+					edges = node.links;
+					console.log("x: "+node.x);
+					console.log("y: "+node.y);
+//					if( on && activeNode !== undefined ) {
+//					// console.log("..clear: ",activeNode);
+//					highlightGraphNode( nodeArray[activeNode], false );
+//					// console.log("..cleared: ",activeNode);	
+//					}
+
+//					// console.log("SHOWNODE "+node.index+" ["+node.label + "]: " + on);
+//					// console.log(" ..object ["+node + "]: " + on);
+//					// locate the SVG nodes: circle & label group
+//					circle = d3.select( '#c' + node.index );
+//					label  = d3.select( '#l' + node.index );
+//					// console.log(" ..DOM: ",label);
+
+//					// activate/deactivate the node itself
+//					// console.log(" ..box CLASS BEFORE:", label.attr("class"));
+//					// console.log(" ..circle",circle.attr('id'),"BEFORE:",circle.attr("class"));
+//					circle
+//					.classed( 'main', on );
+//					label
+//					.classed( 'on', on || currentZoom >= SHOW_THRESHOLD );
+//					label.selectAll('text')
+//					.classed( 'main', on );
+//					// console.log(" ..circle",circle.attr('id'),"AFTER:",circle.attr("class"));
+//					// console.log(" ..box AFTER:",label.attr("class"));
+//					// console.log(" ..label=",label);
+
+//					// activate all siblings
+//					// console.log(" ..SIBLINGS ["+on+"]: "+node.links);
+//					Object(node.links).forEach( function(id) {
+//					d3.select("#c"+id).classed( 'sibling', on );
+//					label = d3.select('#l'+id);
+//					label.classed( 'on', on || currentZoom >= SHOW_THRESHOLD );
+//					label.selectAll('text.nlabel')
+//					.classed( 'sibling', on );
+//					} );
+
+//					// set the value for the current active movie
+//					activeNode = on ? node.index : undefined;
+//					// console.log("SHOWNODE finished: "+node.index+" = "+on );
 				}
 
 
 				/* --------------------------------------------------------------------- */
-				/* Show the details panel for a movie AND highlight its node in 
+				/* Show the details panel for a node AND highlight its node in 
        the graph. Also called from outside the d3.json context.
        Parameters:
-       - new_idx: index of the movie to show
+       - new_idx: index of the node to show
        - doMoveTo: boolean to indicate if the graph should be centered
-         on the movie
+         on the node
 				 */
 				selectNode = function( new_idx, doMoveTo ) {
 					// do we want to center the graph on the node?
@@ -330,14 +373,14 @@ function D3ok() {
 								y : s.y + height/2 - nodeArray[new_idx].y*currentZoom };
 						repositionGraph( offset, undefined, 'move' );
 					}
-					// Now highlight the graph node and show its movie panel
+					// Now highlight the graph node and show its node panel
 					highlightGraphNode( nodeArray[new_idx], true );
 					showNodePanel( nodeArray[new_idx] );
 				}
 
 
 				/* --------------------------------------------------------------------- */
-				/* Show the movie details panel for a given node
+				/* Show the node details panel for a given node
 				 */
 				function showNodePanel( node ) {
 					// Fill it and display the panel
@@ -352,7 +395,7 @@ function D3ok() {
        - on node repositioning (as result of a force-directed iteration)
        - on translations (user is panning)
        - on zoom changes (user is zooming)
-       - on explicit node highlight (user clicks in a movie panel link)
+       - on explicit node highlight (user clicks in a node panel link)
        Set also the values keeping track of current offset & zoom values
 				 */
 				function repositionGraph( off, z, mode ) {
@@ -456,7 +499,7 @@ function D3ok() {
 					repositionGraph(undefined,undefined,'tick');
 				});
 
-				/* A small hack to start the graph with a movie pre-selected */
+				/* A small hack to start the graph with a node pre-selected */
 				mid = getQStringParameterByName('id')
 				if( mid != null )
 					clearAndSelect( mid );

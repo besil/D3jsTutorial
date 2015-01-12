@@ -1,1 +1,1 @@
-python -m SimpleHTTPServer
+twistd -no web --path=.

@@ -24,7 +24,7 @@ var zoomCall = undefined;
 //Do the stuff -- to be called after D3.js has loaded
 function D3ok() {
 
-	DEBUG = true;
+	DEBUG = false;
 
 	// In debug mode, ensure there is a console object (MSIE does not have it by 
 	// default). In non-debug mode, ensure the console log does nothing

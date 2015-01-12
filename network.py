@@ -17,7 +17,7 @@ def build_graph():
 #     g = nx.Graph()
     
     minNode = 0
-    maxNode = 50
+    maxNode = 500
     degree = 0.08
     
 #     g = nx.erdos_renyi_graph(maxNode, degree);

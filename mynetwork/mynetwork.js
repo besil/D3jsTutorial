@@ -5,7 +5,7 @@
 
 
 //Highlight a movie in the graph. It is a closure within the d3.json() call.
-var selectMovie = undefined;
+var selectNode = undefined;
 
 //Change status of a panel from visible to hidden or viceversa
 var toggleDiv = undefined;
@@ -80,7 +80,7 @@ function D3ok() {
 	// Get the current size & offset of the browser's viewport window
 	function getViewportSize( w ) {
 		var w = w || window;
-		console.log(w);
+//		console.log(w);
 		if( w.innerWidth != null ) 
 			return { w: w.innerWidth, 
 			h: w.innerHeight,
@@ -111,7 +111,7 @@ function D3ok() {
 	 */
 	toggleDiv = function( id, status ) {
 		d = d3.select('div#'+id);
-		console.log( 'TOGGLE', id, d.attr('class'), '->', status );
+//		console.log( 'TOGGLE', id, d.attr('class'), '->', status );
 		if( status === undefined )
 			status = d.attr('class') == 'panel_on' ? 'off' : 'on';
 		d.attr( 'class', 'panel_' + status );
@@ -125,74 +125,62 @@ function D3ok() {
 	clearAndSelect = function (id) {
 		toggleDiv('faq','off'); 
 		toggleDiv('help','off'); 
-		selectMovie(id,true);	// we use here the selectMovie() closure
+		selectNode(id,true);	// we use here the selectNode() closure
 	}
 
 
-	/* Compose the content for the panel with movie details.
+	/* Compose the content for the panel with node details.
      Parameters: the node data, and the array containing all nodes
 	 */
-	function getMovieInfo( n, nodeArray ) {
+	function getNodeInfo( n, nodeArray ) {
 		info = '<div id="cover">';
-		info += '<strong>Id</strong>: '+ n.id;
+		
+		info += "<br></br><br></br>"
+		
+		info += '<strong>Index</strong>: ' 	+ +n.index+'</br>';
+		info += '<strong>Level</strong>: ' 	+ +n.level+'</br>';
+		info += '<strong>Label</strong>: ' 	+ +n.label+'</br>';
+		info += '<strong>Score</strong>: ' 	+ +n.score+'</br>';
+		info += '<strong>Id   </strong>: ' 	+ +n.id   +'</br>';
+		info += '<div class=f><span class=l>Related to</span>: ';
+		n.links.forEach( function(idx) {
+		info += '[<a href="javascript:void(0);" onclick="selectNode('  
+		+ idx + ',true);">' + nodeArray[idx].label + '</a>]'
+		});
+		
+		info += "<br></br><br></br>";
+		
 		info +=
 			'<img src="img/close.png" class="action" style="top: 0px;" title="close panel" onClick="toggleDiv(\'nodeinfo\');"/>' +
-			'<img src="img/target-32.png" class="action" style="top: 280px;" title="center graph on movie" onclick="selectMovie('+n.index+',true);"/>';
+			'<img src="img/target-32.png" class="action" style="top: 280px;" title="center graph on movie" onclick="selectNode('+n.index+',true);"/>';
 		info += "</div>";
 		return info
-//		info = '<div id="cover">';
-//		if( n.cover )
-//		info += '<img class="cover" height="300" src="' + n.cover + '" title="' + n.label + '"/>';
-//		else
-//		info += '<div class=t style="float: right">' + n.title + '</div>';
-//		info +=
-//		'<img src="img/close.png" class="action" style="top: 0px;" title="close panel" onClick="toggleDiv(\'nodeinfo\');"/>' +
-//		'<img src="img/target-32.png" class="action" style="top: 280px;" title="center graph on movie" onclick="selectMovie('+n.index+',true);"/>';
-
-//		info += '<br/></div><div style="clear: both;">'
-//		if( n.genre )
-//		info += '<div class=f><span class=l>Genre</span>: <span class=g>' 
-//		+ n.genre + '</span></div>';
-//		if( n.director )
-//		info += '<div class=f><span class=l>Directed by</span>: <span class=d>' 
-//		+ n.director + '</span></div>';
-//		if( n.cast )
-//		info += '<div class=f><span class=l>Cast</span>: <span class=c>' 
-//		+ n.cast + '</span></div>';
-//		if( n.duration )
-//		info += '<div class=f><span class=l>Year</span>: ' + n.year 
-//		+ '<span class=l style="margin-left:1em;">Duration</span>: ' 
-//		+ n.duration + '</div>';
-//		if( n.links ) {
-//		info += '<div class=f><span class=l>Related to</span>: ';
-//		n.links.forEach( function(idx) {
-//		info += '[<a href="javascript:void(0);" onclick="selectMovie('  
-//		+ idx + ',true);">' + nodeArray[idx].label + '</a>]'
-//		});
-//		info += '</div>';
-//		}
-//		return info;
 	}
 
 
 	// *************************************************************************
 
 	d3.json(
-			// 'data/movie-network-25-7-3.json',
 			"graph.json",
 			function(data) {
 
 				// Declare the variables pointing to the node & link arrays
 				var nodeArray = data.nodes;
 				var linkArray = data.links;
-				console.log("NODES:",nodeArray);
-				console.log("LINKS:",linkArray);
-
+				// console.log("NODES:",nodeArray);
+				// console.log("LINKS:",linkArray);
+				
+				var minScore =
+					Math.min.apply(null,nodeArray.map(function(n) {return n.score}));
+				
+				var maxScore =
+					Math.max.apply(null,nodeArray.map(function(n) {return n.score}));
+				
 				minLinkWeight = 
 					Math.min.apply( null, linkArray.map( function(n) {return n.weight;} ) );
 				maxLinkWeight = 
 					Math.max.apply( null, linkArray.map( function(n) {return n.weight;} ) );
-				console.log( "link weight = ["+minLinkWeight+","+maxLinkWeight+"]" );
+				// console.log( "link weight = ["+minLinkWeight+","+maxLinkWeight+"]" );
 
 				// Add the node & link arrays to the layout, and start it
 				force
@@ -202,7 +190,7 @@ function D3ok() {
 
 				// A couple of scales for node radius & edge width
 				var node_size = d3.scale.linear()
-				.domain([5,10])	// we know score is in this domain
+				.domain([minScore,maxScore])	// we know score is in this domain
 				.range([1,16])
 				.clamp(true);
 				var edge_width = d3.scale.pow().exponent(8)
@@ -282,33 +270,33 @@ function D3ok() {
 					// If we are to activate a movie, and there's already one active,
 					// first switch that one off
 					if( on && activeMovie !== undefined ) {
-						console.log("..clear: ",activeMovie);
+						// console.log("..clear: ",activeMovie);
 						highlightGraphNode( nodeArray[activeMovie], false );
-						console.log("..cleared: ",activeMovie);	
+						// console.log("..cleared: ",activeMovie);	
 					}
 
-					console.log("SHOWNODE "+node.index+" ["+node.label + "]: " + on);
-					console.log(" ..object ["+node + "]: " + on);
+					// console.log("SHOWNODE "+node.index+" ["+node.label + "]: " + on);
+					// console.log(" ..object ["+node + "]: " + on);
 					// locate the SVG nodes: circle & label group
 					circle = d3.select( '#c' + node.index );
 					label  = d3.select( '#l' + node.index );
-					console.log(" ..DOM: ",label);
+					// console.log(" ..DOM: ",label);
 
 					// activate/deactivate the node itself
-					console.log(" ..box CLASS BEFORE:", label.attr("class"));
-					console.log(" ..circle",circle.attr('id'),"BEFORE:",circle.attr("class"));
+					// console.log(" ..box CLASS BEFORE:", label.attr("class"));
+					// console.log(" ..circle",circle.attr('id'),"BEFORE:",circle.attr("class"));
 					circle
 					.classed( 'main', on );
 					label
 					.classed( 'on', on || currentZoom >= SHOW_THRESHOLD );
 					label.selectAll('text')
 					.classed( 'main', on );
-					console.log(" ..circle",circle.attr('id'),"AFTER:",circle.attr("class"));
-					console.log(" ..box AFTER:",label.attr("class"));
-					console.log(" ..label=",label);
+					// console.log(" ..circle",circle.attr('id'),"AFTER:",circle.attr("class"));
+					// console.log(" ..box AFTER:",label.attr("class"));
+					// console.log(" ..label=",label);
 
 					// activate all siblings
-					console.log(" ..SIBLINGS ["+on+"]: "+node.links);
+					// console.log(" ..SIBLINGS ["+on+"]: "+node.links);
 					Object(node.links).forEach( function(id) {
 						d3.select("#c"+id).classed( 'sibling', on );
 						label = d3.select('#l'+id);
@@ -319,7 +307,7 @@ function D3ok() {
 
 					// set the value for the current active movie
 					activeMovie = on ? node.index : undefined;
-					console.log("SHOWNODE finished: "+node.index+" = "+on );
+					// console.log("SHOWNODE finished: "+node.index+" = "+on );
 				}
 
 
@@ -331,7 +319,7 @@ function D3ok() {
        - doMoveTo: boolean to indicate if the graph should be centered
          on the movie
 				 */
-				selectMovie = function( new_idx, doMoveTo ) {
+				selectNode = function( new_idx, doMoveTo ) {
 					// do we want to center the graph on the node?
 					doMoveTo = doMoveTo || false;
 					if( doMoveTo ) {
@@ -354,9 +342,9 @@ function D3ok() {
 				function showNodePanel( node ) {
 					// Fill it and display the panel
 					nodeInfoDiv
-					.html( getMovieInfo(node,nodeArray) )
+					.html( getNodeInfo(node,nodeArray) )
 					.attr("class","panel_on");
-				}
+				};
 
 
 				/* --------------------------------------------------------------------- */
@@ -368,7 +356,7 @@ function D3ok() {
        Set also the values keeping track of current offset & zoom values
 				 */
 				function repositionGraph( off, z, mode ) {
-					console.log( "REPOS: off="+off, "zoom="+z, "mode="+mode );
+					// console.log( "REPOS: off="+off, "zoom="+z, "mode="+mode );
 
 					// do we want to do a transition?
 					var doTr = (mode == 'move');
@@ -419,7 +407,7 @@ function D3ok() {
 				/* Perform drag
 				 */
 				function dragmove(d) {
-					console.log("DRAG",d3.event);
+					// console.log("DRAG",d3.event);
 					offset = { x : currentOffset.x + d3.event.dx,
 							y : currentOffset.y + d3.event.dy };
 					repositionGraph( offset, undefined, 'drag' );
@@ -434,7 +422,7 @@ function D3ok() {
 				function doZoom( increment ) {
 					newZoom = increment === undefined ? d3.event.scale 
 							: zoomScale(currentZoom+increment);
-					console.log("ZOOM",currentZoom,"->",newZoom,increment);
+					// console.log("ZOOM",currentZoom,"->",newZoom,increment);
 					if( currentZoom == newZoom )
 						return;	// no zoom change
 
@@ -453,7 +441,7 @@ function D3ok() {
 					zoomRatio = newZoom/currentZoom;
 					newOffset = { x : currentOffset.x*zoomRatio + width/2*(1-zoomRatio),
 							y : currentOffset.y*zoomRatio + height/2*(1-zoomRatio) };
-					console.log("offset",currentOffset,"->",newOffset);
+					// console.log("offset",currentOffset,"->",newOffset);
 
 					// Reposition the graph
 					repositionGraph( newOffset, newZoom, "zoom" );

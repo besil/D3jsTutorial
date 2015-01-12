@@ -1,34 +1,3 @@
-/* ---------------------------------------------------------------------------
-   (c) Telefonica I+D, 2013
-   Author: Paulo Villegas
-
-   This script is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-   -------------------------------------------------------------------------- */
-
-
-// For MSIE < 9, forget it
-function D3notok() {
-  document.getElementById('sidepanel').style.visibility = 'hidden';
-  var nocontent = document.getElementById('nocontent');
-  nocontent.style.visibility = 'visible';
-  nocontent.style.pointerEvents = 'all';
-  var t = document.getElementsByTagName('body');
-  var body = document.getElementsByTagName('body')[0];
-  body.style.backgroundImage = "url('img/movie-network-screenshot-d.png')";
-  body.style.backgroundRepeat = "no-repeat";
-}
-
 // -------------------------------------------------------------------
 // A number of forward declarations. These variables need to be defined since 
 // they are attached to static code in HTML. But we cannot define them yet
@@ -95,7 +64,7 @@ function D3ok() {
     .linkStrength( function(d,idx) { return d.weight; } );
 
   // Add to the page the SVG element that will contain the movie network
-  var svg = d3.select("#movieNetwork").append("svg:svg")
+  var svg = d3.select("#mynetwork").append("svg:svg")
     .attr('xmlns','http://www.w3.org/2000/svg')
     .attr("width", WIDTH)
     .attr("height", HEIGHT)
@@ -104,7 +73,7 @@ function D3ok() {
     .attr("preserveAspectRatio", "xMidYMid meet");
 
   // Movie panel: the div into which the movie details info will be written
-  movieInfoDiv = d3.select("#movieInfo");
+  nodeInfoDiv = d3.select("#nodeinfo");
 
   /* ....................................................................... */
 
@@ -173,7 +142,7 @@ function D3ok() {
     else
       info += '<div class=t style="float: right">' + n.title + '</div>';
     info +=
-    '<img src="img/close.png" class="action" style="top: 0px;" title="close panel" onClick="toggleDiv(\'movieInfo\');"/>' +
+    '<img src="img/close.png" class="action" style="top: 0px;" title="close panel" onClick="toggleDiv(\'nodeinfo\');"/>' +
     '<img src="img/target-32.png" class="action" style="top: 280px;" title="center graph on movie" onclick="selectMovie('+n.index+',true);"/>';
 
     info += '<br/></div><div style="clear: both;">'
@@ -384,7 +353,7 @@ function D3ok() {
      */
     function showMoviePanel( node ) {
       // Fill it and display the panel
-      movieInfoDiv
+      nodeInfoDiv
 	.html( getMovieInfo(node,nodeArray) )
 	.attr("class","panel_on");
     }

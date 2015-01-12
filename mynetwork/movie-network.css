@@ -1,5 +1,5 @@
 /* ---------------------------------------------------------------------------
-   (c) Telefónica I+D, 2013
+   (c) Telefï¿½nica I+D, 2013
    Author: Paulo Villegas
    ------------------------------------------------------------------------- */
 
@@ -188,7 +188,7 @@ div#nocontent h1 {
 /* ....................................................................... */
 /* Movie details panel */
 
-div#movieInfo {
+div#nodeinfo {
     position: relative;
     right: 4px;
     cursor: text;
@@ -203,42 +203,42 @@ div#movieInfo {
     text-align: right;
 }
 
-div#movieInfo div#cover {
+div#nodeinfo div#cover {
     text-align: left; 
     height: 300px;
 }
 
-div#movieInfo div.t {
+div#nodeinfo div.t {
     font-size: 14px;
     font-weight: bold;
 }
 
-div#movieInfo img.cover {
+div#nodeinfo img.cover {
     margin-bottom: 6px;
     position: absolute;
     right: 3px;
 }
 
-div#movieInfo img.action {
+div#nodeinfo img.action {
     cursor: pointer;
     position: absolute;
 }
 
-div#movieInfo div.f {
+div#nodeinfo div.f {
     border-top: 1px dotted #8E5981;
     margin-bottom: 3px;
     margin-top: 3px;
 }
 
-div#movieInfo span.d {
+div#nodeinfo span.d {
     font-weight: bold;
 }
 
-div#movieInfo span.c {
+div#nodeinfo span.c {
     font-style: italic;
 }
 
-div#movieInfo span.l {
+div#nodeinfo span.l {
     font-size: 11px;
     color: #24553E;
     font-variant: small-caps;
@@ -247,7 +247,7 @@ div#movieInfo span.l {
 /* ....................................................................... */
 /* SVG elements */
 
-div#movieNetwork svg {
+div#mynetwork svg {
     background-color: white;
     cursor: move;
 }

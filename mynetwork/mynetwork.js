@@ -24,7 +24,7 @@ var zoomCall = undefined;
 //Do the stuff -- to be called after D3.js has loaded
 function D3ok() {
 
-	DEBUG = false;
+	DEBUG = true;
 
 	// In debug mode, ensure there is a console object (MSIE does not have it by 
 	// default). In non-debug mode, ensure the console log does nothing
@@ -99,8 +99,6 @@ function D3ok() {
 					y: d.body.scrollTop};
 	}
 
-
-
 	function getQStringParameterByName(name) {
 		var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
 		return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
@@ -135,46 +133,53 @@ function D3ok() {
      Parameters: the node data, and the array containing all nodes
 	 */
 	function getMovieInfo( n, nodeArray ) {
-		console.log( "INFO", n );
 		info = '<div id="cover">';
-		if( n.cover )
-			info += '<img class="cover" height="300" src="' + n.cover + '" title="' + n.label + '"/>';
-		else
-			info += '<div class=t style="float: right">' + n.title + '</div>';
+		info += '<strong>Id</strong>: '+ n.id;
 		info +=
 			'<img src="img/close.png" class="action" style="top: 0px;" title="close panel" onClick="toggleDiv(\'nodeinfo\');"/>' +
 			'<img src="img/target-32.png" class="action" style="top: 280px;" title="center graph on movie" onclick="selectMovie('+n.index+',true);"/>';
+		info += "</div>"
+			return info
+//			info = '<div id="cover">';
+//			if( n.cover )
+//			info += '<img class="cover" height="300" src="' + n.cover + '" title="' + n.label + '"/>';
+//			else
+//			info += '<div class=t style="float: right">' + n.title + '</div>';
+//			info +=
+//			'<img src="img/close.png" class="action" style="top: 0px;" title="close panel" onClick="toggleDiv(\'nodeinfo\');"/>' +
+//			'<img src="img/target-32.png" class="action" style="top: 280px;" title="center graph on movie" onclick="selectMovie('+n.index+',true);"/>';
 
-		info += '<br/></div><div style="clear: both;">'
-			if( n.genre )
-				info += '<div class=f><span class=l>Genre</span>: <span class=g>' 
-					+ n.genre + '</span></div>';
-		if( n.director )
-			info += '<div class=f><span class=l>Directed by</span>: <span class=d>' 
-				+ n.director + '</span></div>';
-		if( n.cast )
-			info += '<div class=f><span class=l>Cast</span>: <span class=c>' 
-				+ n.cast + '</span></div>';
-		if( n.duration )
-			info += '<div class=f><span class=l>Year</span>: ' + n.year 
-			+ '<span class=l style="margin-left:1em;">Duration</span>: ' 
-			+ n.duration + '</div>';
-		if( n.links ) {
-			info += '<div class=f><span class=l>Related to</span>: ';
-			n.links.forEach( function(idx) {
-				info += '[<a href="javascript:void(0);" onclick="selectMovie('  
-					+ idx + ',true);">' + nodeArray[idx].label + '</a>]'
-			});
-			info += '</div>';
-		}
-		return info;
+//			info += '<br/></div><div style="clear: both;">'
+//			if( n.genre )
+//			info += '<div class=f><span class=l>Genre</span>: <span class=g>' 
+//			+ n.genre + '</span></div>';
+//			if( n.director )
+//			info += '<div class=f><span class=l>Directed by</span>: <span class=d>' 
+//			+ n.director + '</span></div>';
+//			if( n.cast )
+//			info += '<div class=f><span class=l>Cast</span>: <span class=c>' 
+//			+ n.cast + '</span></div>';
+//			if( n.duration )
+//			info += '<div class=f><span class=l>Year</span>: ' + n.year 
+//			+ '<span class=l style="margin-left:1em;">Duration</span>: ' 
+//			+ n.duration + '</div>';
+//			if( n.links ) {
+//			info += '<div class=f><span class=l>Related to</span>: ';
+//			n.links.forEach( function(idx) {
+//			info += '[<a href="javascript:void(0);" onclick="selectMovie('  
+//			+ idx + ',true);">' + nodeArray[idx].label + '</a>]'
+//			});
+//			info += '</div>';
+//			}
+//			return info;
 	}
 
 
 	// *************************************************************************
 
 	d3.json(
-			'data/movie-network-25-7-3.json',
+			// 'data/movie-network-25-7-3.json',
+			"graph.json",
 			function(data) {
 
 				// Declare the variables pointing to the node & link arrays
@@ -233,9 +238,8 @@ function D3ok() {
 				.enter().append("svg:circle")
 				.attr('id', function(d) { return "c" + d.index; } )
 				.attr('class', function(d) { return 'node level'+d.level;} )
-				.attr('r', function(d) { return node_size(d.score); } )
+				.attr('r', function(d) { return d.score; } )
 				.attr('pointer-events', 'all')
-				//.on("click", function(d) { highlightGraphNode(d,true,this); } )    
 				.on("click", function(d) { showMoviePanel(d); } )
 				.on("mouseover", function(d) { highlightGraphNode(d,true,this);  } )
 				.on("mouseout",  function(d) { highlightGraphNode(d,false,this); } );

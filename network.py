@@ -1,23 +1,60 @@
 #!/usr/bin/python
 
 import json
-import networkx as nx
 from networkx.readwrite import json_graph
 from pprint import pprint
+import random as r
+
+import networkx as nx
+
 
 fout = "mynetwork/graph.json"
 
 # G = nx.karate_club_graph()
-G = nx.barabasi_albert_graph(10, 2);
+
+
+def build_graph():
+#     g = nx.Graph()
+    
+    minNode = 0
+    maxNode = 50
+    degree = 0.1
+    
+#     g = nx.erdos_renyi_graph(maxNode, degree);
+    g = nx.powerlaw_cluster_graph(maxNode, 3, 0.2 )
+
+    def get_attr_for(g, n):
+        return {
+            "label" : n,
+            "index" : n,
+            "level" : g.degree(n),
+            "score" : r.uniform(7, 10),
+            "links" : g.neighbors(n)
+        }
+    
+    nx.set_node_attributes(g, 'label', { n : n for n in g.nodes() })
+    nx.set_node_attributes(g, 'index', { n : n for n in g.nodes() })
+    nx.set_node_attributes(g, 'level', { n : 10 for n in g.nodes()})
+    nx.set_node_attributes(g, 'score', { n : r.uniform(7, 10) for n in g.nodes() })
+    nx.set_node_attributes(g, 'links', { n : g.neighbors(n) for n in g.nodes() })
+    
+    nx.set_edge_attributes(g, 'weight', { e : r.uniform(0.1, 1.0) for e in g.edges() })
+    
+    return g
 
 # this d3 example uses the name attribute for the mouse-hover value,
 # so add a name to each node
-# for n in G:
-#     G.node[n]['name'] = n
+# for n in g:
+#     g.node[n]['name'] = n
 
-# write json formatted data
-d = json_graph.node_link_data(G) # node-link format to serialize
-# d = json_graph.adjacency_data(G)
+
+# d = json_graph.adjacency_data(g)
 # write json
 
-json.dump(d, open(fout,'w'))
+
+if __name__ == '__main__':
+    g = build_graph()
+    # write json formatted data
+    d = json_graph.node_link_data(g) # node-link format to serialize
+    
+    json.dump(d, open(fout, 'w'))

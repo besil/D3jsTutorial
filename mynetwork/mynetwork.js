@@ -309,48 +309,36 @@ function D3ok() {
 
 				/** Select/unselect a edges in the network graph **/
 				function highlightNodeEdges( node, on ) {
-					edges = node.links;
-					console.log("x: "+node.x);
-					console.log("y: "+node.y);
-//					if( on && activeNode !== undefined ) {
-//					// console.log("..clear: ",activeNode);
-//					highlightGraphNode( nodeArray[activeNode], false );
-//					// console.log("..cleared: ",activeNode);	
-//					}
-
-//					// console.log("SHOWNODE "+node.index+" ["+node.label + "]: " + on);
-//					// console.log(" ..object ["+node + "]: " + on);
-//					// locate the SVG nodes: circle & label group
-//					circle = d3.select( '#c' + node.index );
-//					label  = d3.select( '#l' + node.index );
-//					// console.log(" ..DOM: ",label);
-
-//					// activate/deactivate the node itself
-//					// console.log(" ..box CLASS BEFORE:", label.attr("class"));
-//					// console.log(" ..circle",circle.attr('id'),"BEFORE:",circle.attr("class"));
-//					circle
-//					.classed( 'main', on );
-//					label
-//					.classed( 'on', on || currentZoom >= SHOW_THRESHOLD );
-//					label.selectAll('text')
-//					.classed( 'main', on );
-//					// console.log(" ..circle",circle.attr('id'),"AFTER:",circle.attr("class"));
-//					// console.log(" ..box AFTER:",label.attr("class"));
-//					// console.log(" ..label=",label);
-
-//					// activate all siblings
-//					// console.log(" ..SIBLINGS ["+on+"]: "+node.links);
-//					Object(node.links).forEach( function(id) {
-//					d3.select("#c"+id).classed( 'sibling', on );
-//					label = d3.select('#l'+id);
-//					label.classed( 'on', on || currentZoom >= SHOW_THRESHOLD );
-//					label.selectAll('text.nlabel')
-//					.classed( 'sibling', on );
-//					} );
-
-//					// set the value for the current active movie
-//					activeNode = on ? node.index : undefined;
-//					// console.log("SHOWNODE finished: "+node.index+" = "+on );
+					var _links = d3.select('#mynetwork').selectAll('line');
+					
+					console.log( _links );
+					
+					if(on)
+						_links.style( 'stroke-width', 12 );
+					else
+						_links.style( 'stroke-width', function(d) { return edge_width(d.weight) } );
+					
+//					console.log( d3.select('g').attr('class','grp gLinks')
+//					
+//					);
+//					.selectAll("line")
+//					.data(linkArray, function(d) {return d.source.id+'-'+d.target.id;} )
+//					.enter().append("line")
+//					.style('stroke-width', function(d) { return edge_width(d.weight);} )
+//					.attr("class", "link")
+					
+//					d3.select('grp gLinks')
+//					.selectAll("line")
+//					.enter().style('stroke-width', function(d) { return 12; } )
+//					;
+					
+//					var graphLinks = networkGraph.append('svg:g').attr('class','grp gLinks')
+//					.selectAll("line")
+//					.data(linkArray, function(d) {return d.source.id+'-'+d.target.id;} )
+//					.enter().append("line")
+//					.style('stroke-width', function(d) { return edge_width(d.weight);} )
+//					.attr("class", "link");
+					
 				}
 
 

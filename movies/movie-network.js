@@ -1,5 +1,5 @@
 /* ---------------------------------------------------------------------------
-   (c) Telefónica I+D, 2013
+   (c) Telefonica I+D, 2013
    Author: Paulo Villegas
 
    This script is free software: you can redistribute it and/or modify

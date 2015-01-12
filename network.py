@@ -18,17 +18,22 @@ def build_graph():
     
     minNode = 0
     maxNode = 50
-    degree = 0.1
+    degree = 0.08
     
 #     g = nx.erdos_renyi_graph(maxNode, degree);
-    g = nx.powerlaw_cluster_graph(maxNode, 3, 0.2 )
-
+#     g = nx.powerlaw_cluster_graph(maxNode, 3, 0.2 )
+    g = nx.binomial_graph(maxNode, degree)
+    weights = { e : r.uniform(0.1, 1.0) for e in g.edges() }
+    nx.set_edge_attributes( g, 'weight', weights )
+    
+    pr = nx.pagerank(g)
+    
     def get_attr_for(g, n):
         return {
             "label" : n,
             "index" : n,
-            "level" : g.degree(n),
-            "score" : r.uniform(7, 10),
+            "level" : pr[n],
+            "score" : pr[n],
             "links" : g.neighbors(n)
         }
     
@@ -37,8 +42,6 @@ def build_graph():
     nx.set_node_attributes(g, 'level', { n : 10 for n in g.nodes()})
     nx.set_node_attributes(g, 'score', { n : r.uniform(7, 10) for n in g.nodes() })
     nx.set_node_attributes(g, 'links', { n : g.neighbors(n) for n in g.nodes() })
-    
-    nx.set_edge_attributes(g, 'weight', { e : r.uniform(0.1, 1.0) for e in g.edges() })
     
     return g
 

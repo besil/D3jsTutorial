@@ -295,6 +295,10 @@ function D3ok() {
 					// console.log(" ..box AFTER:",label.attr("class"));
 					// console.log(" ..label=",label);
 
+					// deactivate all nodes
+					d3.selectAll("circle").classed("hidden", on);
+					
+					
 					// activate all siblings
 					// console.log(" ..SIBLINGS ["+on+"]: "+node.links);
 					Object(node.links).forEach( function(id) {

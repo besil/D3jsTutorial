@@ -280,6 +280,10 @@ circle.level3 {
     stroke-opacity: 0.5;
 }
 
+circle.hidden {
+	fill: #d8d7de;
+}
+
 circle.sibling {
     /*fill: blue;*/
     fill: #455EE8;

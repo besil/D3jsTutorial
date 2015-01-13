@@ -383,6 +383,7 @@ function D3ok() {
 					}
 					// Now highlight the graph node and show its node panel
 					highlightGraphNode( nodeArray[new_idx], true );
+					highlightNodeEdges( nodeArray[new_idx], true );
 					showNodePanel( nodeArray[new_idx] );
 				}
 

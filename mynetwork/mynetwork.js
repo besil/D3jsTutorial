@@ -272,7 +272,6 @@ function D3ok() {
 					if( on && activeNode !== undefined ) {
 						// console.log("..clear: ",activeNode);
 						highlightGraphNode( nodeArray[activeNode], false );
-						// highlightNodeEdges( nodeArray[activeNode], false );
 						// console.log("..cleared: ",activeNode);	
 					}
 
@@ -329,8 +328,19 @@ function D3ok() {
 //						console.log( "srcNode: "+ _links[0][0].getAttribute("srcNode") );
 						
 //						var inlinks = _links[0].filter( function(d) { return d.getAttribute("srcNode") == ""+node.id+""});
-//						var outlinks = _links[0].filter( function(d) { return d.getAttribute("dstNode") == ""+node.id+""});
 //						console.log( "Degree: "+ ( inlinks.length + outlinks.length ) );
+						
+						
+						// enlight neighbours connections
+						for ( var neigh_index in node.links) {
+							var neigh = node.links[neigh_index];
+							_links[0].filter( function(d) {
+								return d.getAttribute("srcNode") == ""+neigh+"";
+							}).forEach( function(d) {
+								d.style.stroke = "green";
+							});
+						}
+						
 						nodeLinks.forEach(function(d) {
 							d.style.stroke = "red";
 						});

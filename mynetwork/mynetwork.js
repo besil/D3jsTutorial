@@ -327,15 +327,15 @@ function D3ok() {
 //						var inlinks = _links[0].filter( function(d) { return d.getAttribute("srcNode") == ""+node.id+""});
 //						var outlinks = _links[0].filter( function(d) { return d.getAttribute("dstNode") == ""+node.id+""});
 //						console.log( "Degree: "+ ( inlinks.length + outlinks.length ) );
-						
-						
-						
 						nodeLinks.forEach(function(d) {
 							d.style.stroke = "red";
 						});
 						
 					} else {
-						_links.style( 'stroke', function(d) { return null } );
+						// _links.style( 'stroke', function(d) { return null } );
+						nodeLinks.forEach(function(d) {
+							d.style.stroke = null;
+						});
 					}
 
 //					console.log( d3.select('g').attr('class','grp gLinks')

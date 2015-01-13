@@ -57,6 +57,9 @@ def build_graph():
 
 if __name__ == '__main__':
     g = build_graph()
+    
+    print "Tot nodes: {}".format( len( g.nodes() ) )
+    print "Tot edges: {}".format( len(g.edges() ) )
     # write json formatted data
     d = json_graph.node_link_data(g) # node-link format to serialize
     

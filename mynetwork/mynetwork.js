@@ -208,7 +208,10 @@ function D3ok() {
 				.data(linkArray, function(d) {return d.source.id+'-'+d.target.id;} )
 				.enter().append("line")
 				.style('stroke-width', function(d) { return edge_width(d.weight);} )
-				.attr("class", "link");
+				.attr("class", "link")
+				.attr("srcNode", function(d) { return d.source.id; } )
+				.attr("dstNode", function(d) { return d.target.id; } )
+				;
 
 				// nodes: an SVG circle
 				var graphNodes = networkGraph.append('svg:g').attr('class','grp gNodes')
@@ -310,35 +313,52 @@ function D3ok() {
 				/** Select/unselect a edges in the network graph **/
 				function highlightNodeEdges( node, on ) {
 					var _links = d3.select('#mynetwork').selectAll('line');
+//					console.log("Current node: "+node.id);
+					var nodeLinks = _links[0].filter( function(d) {
+						return d.getAttribute("srcNode") == ""+node.id+"" || d.getAttribute("dstNode") == ""+node.id+"";
+					});
 					
-					console.log( _links );
-					
-					if(on)
-						_links.style( 'stroke-width', 12 );
-					else
-						_links.style( 'stroke-width', function(d) { return edge_width(d.weight) } );
-					
+					if(on) {
+//						console.log( "_links: "+ _links);
+//						console.log( "_links[0]" + _links[0]);
+//						console.log( "_links[0][0]" + _links[0][0] );
+//						console.log( "srcNode: "+ _links[0][0].getAttribute("srcNode") );
+						
+//						var inlinks = _links[0].filter( function(d) { return d.getAttribute("srcNode") == ""+node.id+""});
+//						var outlinks = _links[0].filter( function(d) { return d.getAttribute("dstNode") == ""+node.id+""});
+//						console.log( "Degree: "+ ( inlinks.length + outlinks.length ) );
+						
+						
+						
+						nodeLinks.forEach(function(d) {
+							d.style.stroke = "red";
+						});
+						
+					} else {
+						_links.style( 'stroke', function(d) { return null } );
+					}
+
 //					console.log( d3.select('g').attr('class','grp gLinks')
-//					
+
 //					);
 //					.selectAll("line")
 //					.data(linkArray, function(d) {return d.source.id+'-'+d.target.id;} )
 //					.enter().append("line")
 //					.style('stroke-width', function(d) { return edge_width(d.weight);} )
 //					.attr("class", "link")
-					
+
 //					d3.select('grp gLinks')
 //					.selectAll("line")
 //					.enter().style('stroke-width', function(d) { return 12; } )
 //					;
-					
+
 //					var graphLinks = networkGraph.append('svg:g').attr('class','grp gLinks')
 //					.selectAll("line")
 //					.data(linkArray, function(d) {return d.source.id+'-'+d.target.id;} )
 //					.enter().append("line")
 //					.style('stroke-width', function(d) { return edge_width(d.weight);} )
 //					.attr("class", "link");
-					
+
 				}
 
 

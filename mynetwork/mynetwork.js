@@ -272,6 +272,7 @@ function D3ok() {
 					if( on && activeNode !== undefined ) {
 						// console.log("..clear: ",activeNode);
 						highlightGraphNode( nodeArray[activeNode], false );
+						// highlightNodeEdges( nodeArray[activeNode], false );
 						// console.log("..cleared: ",activeNode);	
 					}
 
@@ -318,6 +319,10 @@ function D3ok() {
 						return d.getAttribute("srcNode") == ""+node.id+"" || d.getAttribute("dstNode") == ""+node.id+"";
 					});
 					
+					if( on && activeNode !== undefined ) {
+						highlightNodeEdges( nodeArray[activeNode], false );
+					}
+					
 					if(on) {
 //						console.log( "_links: "+ _links);
 //						console.log( "_links[0]" + _links[0]);
@@ -332,10 +337,10 @@ function D3ok() {
 						});
 						
 					} else {
-						// _links.style( 'stroke', function(d) { return null } );
-						nodeLinks.forEach(function(d) {
-							d.style.stroke = null;
-						});
+						_links.style( 'stroke', function(d) { return null } );
+//						nodeLinks.forEach(function(d) {
+//							d.style.stroke = null;
+//						});
 					}
 
 //					console.log( d3.select('g').attr('class','grp gLinks')

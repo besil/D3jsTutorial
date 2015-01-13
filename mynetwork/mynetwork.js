@@ -313,6 +313,7 @@ function D3ok() {
 				/** Select/unselect a edges in the network graph **/
 				function highlightNodeEdges( node, on ) {
 					var _links = d3.select('#mynetwork').selectAll('line');
+					
 					var nodeLinks = _links[0].filter( function(d) {
 						return d.getAttribute("srcNode") == ""+node.id+"" || d.getAttribute("dstNode") == ""+node.id+"";
 					});
@@ -330,6 +331,8 @@ function D3ok() {
 //						var inlinks = _links[0].filter( function(d) { return d.getAttribute("srcNode") == ""+node.id+""});
 //						console.log( "Degree: "+ ( inlinks.length + outlinks.length ) );
 						
+						// remove color from all edges
+						_links.style( 'stroke', function(d) { return "lavender"; } );
 						
 						// enlight neighbours connections
 						for ( var neigh_index in node.links) {

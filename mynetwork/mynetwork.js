@@ -314,7 +314,6 @@ function D3ok() {
 				/** Select/unselect a edges in the network graph **/
 				function highlightNodeEdges( node, on ) {
 					var _links = d3.select('#mynetwork').selectAll('line');
-//					console.log("Current node: "+node.id);
 					var nodeLinks = _links[0].filter( function(d) {
 						return d.getAttribute("srcNode") == ""+node.id+"" || d.getAttribute("dstNode") == ""+node.id+"";
 					});
@@ -342,27 +341,6 @@ function D3ok() {
 //							d.style.stroke = null;
 //						});
 					}
-
-//					console.log( d3.select('g').attr('class','grp gLinks')
-
-//					);
-//					.selectAll("line")
-//					.data(linkArray, function(d) {return d.source.id+'-'+d.target.id;} )
-//					.enter().append("line")
-//					.style('stroke-width', function(d) { return edge_width(d.weight);} )
-//					.attr("class", "link")
-
-//					d3.select('grp gLinks')
-//					.selectAll("line")
-//					.enter().style('stroke-width', function(d) { return 12; } )
-//					;
-
-//					var graphLinks = networkGraph.append('svg:g').attr('class','grp gLinks')
-//					.selectAll("line")
-//					.data(linkArray, function(d) {return d.source.id+'-'+d.target.id;} )
-//					.enter().append("line")
-//					.style('stroke-width', function(d) { return edge_width(d.weight);} )
-//					.attr("class", "link");
 
 				}
 

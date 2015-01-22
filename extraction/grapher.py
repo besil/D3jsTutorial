@@ -21,12 +21,14 @@ if __name__ == '__main__':
     data = read( anagr_fname, sep="," )
     header, lines = read(anagr_fname)
     
-    lf = LineFeed( header, lines )
+    lf = LineFeed( header, lines, key=( 'KEY', 0, 1 ) )
     
     g = nx.Graph()
     for l in lf:
-        sinistro_id = l['SINISTRO']
-        g.add_node(sinistro_id, attr_dict)
+        # sinistro_id = l['SINISTRO']
+        print l['KEY']
+#         g.add_node(sinistro_id, attr_dict)
+        
     
 #     sinistro = header['SINISTRO']
 #     fisc_altro = header['COD_FISC_COND_VEIC_CTP']
@@ -38,7 +40,7 @@ if __name__ == '__main__':
 #         fiscale_altri |= { line[fisc_altro] }
 #         fiscali_nstr  |= { line[fisc_nostr] }
     
-    print "Lines:", len(lines)
-    print "Fiscali altri:", len(fiscale_altri)
-    print "Fiscali nostri:", len(fiscali_nstr)
+#     print "Lines:", len(lines)
+#     print "Fiscali altri:", len(fiscale_altri)
+#     print "Fiscali nostri:", len(fiscali_nstr)
     

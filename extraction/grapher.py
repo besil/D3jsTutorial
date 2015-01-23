@@ -9,6 +9,7 @@ def read(fname, sep=","):
     lines = [ x.strip().split(sep) for x in fin.readlines() ]
     fin.close()
     
+    print lines[12]
     split = lines[0]
     header = { split[i]:i for i in range(len(split)) }
     
@@ -18,18 +19,38 @@ def read(fname, sep=","):
 if __name__ == '__main__':
     anagr_fname = "../data/anagrafiche.csv"    
     
-    data = read( anagr_fname, sep="," )
     header, lines = read(anagr_fname)
     
     lf = LineFeed( header, lines, key=( 'KEY', 0, 1 ) )
     
+#     pprint(lf.header)
+    
     g = nx.Graph()
     for record in lf:
-        # sinistro_id = l['SINISTRO']
-        key = record['KEY']
-        # print key[0]
+        sinistro_id = record['SINISTRO'][0]
+        ctp         = record['CTP'][0]
         
-#         g.add_node(sinistro_id, attr_dict)
+        cond_nsp    = record[ 'NOM_COND_VEIC_NSP' ][0]
+        cond_ctp    = record[ 'NOM_COND_VEIC_CTP' ][0]
+        contr_nsp   = record[ 'NOM_CONTR_POL_NSP' ][0]
+        test_nsp    = record[ 'NOM_TESTIM_NSP' ][0]
+        test_ctp    = record[ 'NOM_TESTIM_CTP' ][0]
+        
+        contr_nsp   = record[ 'NOM_CONTR_POL_NSP' ][0]
+        nom_dann    = record[ 'NOM_DANNEG' ][0]
+        
+        if contr_nsp != '' and nom_dann != '':
+            if not g.has_node(sinistro_id): g.add_node( sinistro_id )
+            if not g.has_node(contr_nsp):   g.add_node( contr_nsp   )
+            if not g.has_node(nom_dann):    g.add_node( nom_dann    )
+            
+            node_sinistro   = g[sinistro_id]
+            node_contr      = g[contr_nsp]
+            node_dann       = g[nom_dann]
+            
+            
+            
+    print "Nodes: {}".format(len(g.nodes()))
         
     
 #     sinistro = header['SINISTRO']

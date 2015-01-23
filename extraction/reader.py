@@ -11,12 +11,10 @@ class LineFeed(object):
         else: self.keyname = self.positions = None
         
     def __getitem__(self, key):
+        ''' Returns always a list of elements '''
         if key == self.keyname:
-            # sin, ctp = self.header['SINISTRO'], self.header['CTP']
-            # return [ "{}-{}".format( l[sin], l[ctp] ) for l in self.lines ]
             return [ "-".join( l[x] for x in self.positions ) for l in self.lines ]
             
-            return []
         pos = self.header[key]
         return [ l[pos] for l in self.lines ]
     

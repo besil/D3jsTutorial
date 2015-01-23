@@ -24,9 +24,11 @@ if __name__ == '__main__':
     lf = LineFeed( header, lines, key=( 'KEY', 0, 1 ) )
     
     g = nx.Graph()
-    for l in lf:
+    for record in lf:
         # sinistro_id = l['SINISTRO']
-        print l['KEY']
+        key = record['KEY']
+        # print key[0]
+        
 #         g.add_node(sinistro_id, attr_dict)
         
     
@@ -39,7 +41,7 @@ if __name__ == '__main__':
 #     for line in lines:
 #         fiscale_altri |= { line[fisc_altro] }
 #         fiscali_nstr  |= { line[fisc_nostr] }
-    
+
 #     print "Lines:", len(lines)
 #     print "Fiscali altri:", len(fiscale_altri)
 #     print "Fiscali nostri:", len(fiscali_nstr)

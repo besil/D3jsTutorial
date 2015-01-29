@@ -10,7 +10,7 @@ G.add_edges_from([[1,3],[1,4],[3,4],[2,3],[2,4],[8,9],[8,10],[9,10],[11,10],[11,
 var color = d3.scale.category20();
 
 jsnx.draw(G, {
-	element: '#canvas',
+	element: '#graph',
 	layout_attr: {
 		charge: -120,
 		linkDistance: 20

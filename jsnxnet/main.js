@@ -47,3 +47,8 @@ d3.selectAll('.node').on('mouseover', function(d) {
 d3.selectAll('.node').on('mouseout', function(d) {
     highlight_nodes(d.G.neighbors(d.node).concat(d.node), false);
 });
+
+d3.selectAll('.node').on('click', function(d) {
+	// stampa il grado del nodo
+	console.log( d.G.neighbors( d.node ).length );
+});

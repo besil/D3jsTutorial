@@ -7,6 +7,8 @@ G.add_nodes_from([8,9,10,11], {group:2});
 G.add_path([1,2,5,6,7,8,11]);
 G.add_edges_from([[1,3],[1,4],[3,4],[2,3],[2,4],[8,9],[8,10],[9,10],[11,10],[11,9]]);
 
+G = jsnx.binomial_graph(30, 0.2);
+
 var color = d3.scale.category20();
 
 jsnx.draw(G, {
@@ -17,20 +19,29 @@ jsnx.draw(G, {
 	},
 	node_shape: "image",
 	node_attr: {
-		"xlink:href": "https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-128.png",
-		width: 16,
-		height: 16,
+//		"xlink:href": "https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-128.png",
+		width: 24,
+		height: 24,
 		x: -8,
 		y: -8,
 		r: 5,
 		title: function(d) { return d.label; },
 		id: function(d) { return "node-"+d.node; },
+		"xlink:href": function(d) {
+//			if(d.data.group == 1)
+			if( Math.random() > 0.75 )
+				return "https://cdn4.iconfinder.com/data/icons/free-large-boss-icon-set/512/Head_physician.png"
+			return "https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-128.png";
+		}
 	},
 	node_style: {
 		fill: function(d) { 
 			return color(d.data.group); 
 		},
 		stroke: 'none',
+	},
+	edge_attr : {
+		id : "edgeid"
 	},
 	edge_style: {
 		fill: '#999'
@@ -52,6 +63,9 @@ function hide_nodes( allnodes, nodes, on ) {
 			return status;
 		});
 	})
+	d3.selectAll('#edgeid').style('opacity', function(d) {
+		return on ? 0 : 1;
+	});
 }
 
 //bind event handlers

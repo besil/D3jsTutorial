@@ -15,10 +15,16 @@ jsnx.draw(G, {
 		charge: -120,
 		linkDistance: 20
 	},
+	node_shape: "image",
 	node_attr: {
+		"xlink:href": "https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-128.png",
+		width: 16,
+		height: 16,
+		x: -8,
+		y: -8,
 		r: 5,
 		title: function(d) { return d.label; },
-		id: function(d) { return "node-"+d.node; }
+		id: function(d) { return "node-"+d.node; },
 	},
 	node_style: {
 		fill: function(d) { 
@@ -32,23 +38,33 @@ jsnx.draw(G, {
 }, true);
 
 function highlight_nodes(nodes, on) {
-    nodes.forEach(function(n) {
-        d3.select('#node-' + n).style('fill', function(d) {
-            return on ? '#EEE' : color( d.data.group );
-        });
-    });
+	nodes.forEach(function(n) {
+		d3.select('#node-' + n).style('fill', function(d) {
+			return on ? '#EEE' : color( d.data.group );
+		});
+	});
 }
 
-// bind event handlers
+function hide_nodes( nodes, on ) {
+	nodes.forEach( function(n) {
+		d3.select('#node-' + n).style('opacity', function(d) {
+			return on ? 0 : 1;
+		});
+	})
+}
+
+//bind event handlers
 d3.selectAll('.node').on('mouseover', function(d) {
-    highlight_nodes(d.G.neighbors(d.node).concat(d.node), true);
+//	highlight_nodes(d.G.neighbors(d.node).concat(d.node), true);
+	hide_nodes(d.G.neighbors(d.node).concat(d.node), true);
 });
 
 d3.selectAll('.node').on('mouseout', function(d) {
-    highlight_nodes(d.G.neighbors(d.node).concat(d.node), false);
+//	highlight_nodes(d.G.neighbors(d.node).concat(d.node), false);
+	hide_nodes(d.G.neighbors(d.node).concat(d.node), false);
 });
 
 d3.selectAll('.node').on('click', function(d) {
 	// stampa il grado del nodo
-	console.log( d.G.neighbors( d.node ).length );
+	console.log( "degree(" + d.node +"): "+d.G.neighbors( d.node ).length );
 });

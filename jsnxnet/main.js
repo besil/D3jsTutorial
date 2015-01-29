@@ -45,10 +45,11 @@ function highlight_nodes(nodes, on) {
 	});
 }
 
-function hide_nodes( nodes, on ) {
-	nodes.forEach( function(n) {
+function hide_nodes( allnodes, nodes, on ) {
+	allnodes.forEach( function(n) {
 		d3.select('#node-' + n).style('opacity', function(d) {
-			return on ? 0 : 1;
+			status = nodes.indexOf(n) != -1 ? 1 : on ? 0 : 1;
+			return status;
 		});
 	})
 }
@@ -56,12 +57,12 @@ function hide_nodes( nodes, on ) {
 //bind event handlers
 d3.selectAll('.node').on('mouseover', function(d) {
 //	highlight_nodes(d.G.neighbors(d.node).concat(d.node), true);
-	hide_nodes(d.G.neighbors(d.node).concat(d.node), true);
+	hide_nodes( d.G.nodes(), d.G.neighbors(d.node).concat(d.node), true);
 });
 
 d3.selectAll('.node').on('mouseout', function(d) {
 //	highlight_nodes(d.G.neighbors(d.node).concat(d.node), false);
-	hide_nodes(d.G.neighbors(d.node).concat(d.node), false);
+	hide_nodes( d.G.nodes(), d.G.neighbors(d.node).concat(d.node), false);
 });
 
 d3.selectAll('.node').on('click', function(d) {
